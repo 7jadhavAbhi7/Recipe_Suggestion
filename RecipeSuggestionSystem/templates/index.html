@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Recipe Suggestor - HomePage
+{% endblock %}
+
+{% block content %}
+  <style>
+    /* Style the containers */
+    
+    .container1 {
+      width: 30%;
+      height: 500px;
+      float: left;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 3px black solid;
+      overflow-y: scroll;
+    }
+    .ul1{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      padding: 10px;
+        
+    }
+    
+    .container2 {
+      width: 70%;
+      height: 500px;
+      float: left;
+      padding: 10px;
+      box-sizing: border-box;
+      overflow-y: scroll;
+      border: 3px black solid;
+    }
+    i.fa-solid{
+      position: absolute;
+      left: 66%;
+      top: 57px;
+      cursor: pointer;
+      color: gray;
+  display: none;
+  }
+  .img{
+      transition: 0.4s;
+  }
+  .img:hover{
+      transform: scale(1.05,1.05);
+      box-shadow: 0 0 5px 1px gray;
+  }
+  
+  .yt:hover{
+      text-shadow:  0 0 4px red;
+      cursor: pointer;
+  }
+  .center{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .wave{
+      width: 5px;
+      height: 100px;
+      background: linear-gradient(45deg, black, yellow);
+      margin: 10px;
+      animation: wave 1s linear infinite;
+      border-radius: 20px;
+      display: none;
+  }
+  .wave:nth-child(2){
+      animation-delay: 0.15s;
+  }
+  .wave:nth-child(3){
+      animation-delay: 0.2s;
+  }
+  .wave:nth-child(4){
+      animation-delay: 0.3s;
+  }
+  .wave:nth-child(5){
+      animation-delay: 0.4s;
+  }
+  .wave:nth-child(6){
+      animation-delay: 0.5s;
+  }
+  .wave:nth-child(7){
+      animation-delay: 0.6s;
+  }
+  .wave:nth-child(8){
+      animation-delay: 0.7s;
+  }
+  .wave:nth-child(9){
+      animation-delay: 0.8s;
+  }
+  .wave:nth-child(10){
+      animation-delay: 0.9s;
+  }
+  
+  @keyframes wave {
+      0%{
+          transform: scale(0);
+      }
+      50%{
+          transform: scale(1);
+      }
+      100%{
+          transform: scale(0);
+      }
+  }
+    
+    /* Clear floats after the containers */
+    
+    .row::after {
+      content: '';
+      clear: both;
+      display: table;
+    }
+  </style>
+  <ol>
+    <div class="row">
+      <div class="container1">
+        <p id="result"></p>
+        <h1>Ingredients</h1>
+        <input type="text" id="search-input" placeholder="Search..."><button id="reset-button">Reset</button>
+        <ul id="ingredients-list">
+          {% for ing in ingredients1['Ingredients1'] %}
+            <li>
+              <input type="checkbox" name="Ingredients" value="{{ ing }}" />{{ ing }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="container2">
+        <h1>Recipes</h1>
+        <ul id="recipes"></ul>
+      </div>
+    </div>
+    
+    <div class="container d-flex justify-content-center my-5">
+      <i class="fa-solid fa-xmark"></i>
+      <input type="text" name="" id="userInput" class="form-control w-50" placeholder="Search Your Meal...">
+      <button id="btn" class="btn btn-warning">Search</button>
+  </div>
+
+  <div class="container my-5" id="heading"></div>
+
+  <div class="container" id="appendData">
+      <h1 class="text-center find">Find Your Recipe</h1>
+
+      <h2 class="text-center text-danger my-3 notfound"></h2>
+      <h2 class="text-center text-success my-5 try"></h2>
+
+  </div>
+
+  <div class="container">
+      <div class="center">
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+      </div>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+  <script>
+      $(document).ready(function(){
+          $('#btn').click(function(){
+              $('.wave').css('display','block')
+              $('.center').fadeToggle(2000);
+          })
+      })
+  </script>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+  
+
+  </ol>
+  
+  <script>
+    
+    var checkboxes = document.getElementsByName('Ingredients');
+    var searchInput = document.getElementById('search-input');
+    var resetButton = document.getElementById('reset-button');
+    var ingredientsList = document.getElementById('ingredients-list');
+    var recipesElement = document.querySelector('#recipes');
+
+    searchInput.addEventListener('keyup', function () {
+      var searchText = searchInput.value.toLowerCase()
+      for (var i = 0; i < checkboxes.length; i++) {
+        var label = checkboxes[i].nextSibling.textContent.toLowerCase()
+        if (label.includes(searchText)) {
+          checkboxes[i].parentElement.style.display = ''
+        } else {
+          checkboxes[i].parentElement.style.display = 'none'
+        }
+      }
+    })
+    resetButton.addEventListener('click', function () {
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = false
+        checkboxes[i].parentElement.style.display = ''
+      }
+      var recipesElement = document.querySelector('#recipes');
+      recipesElement.innerHTML = '';
+      document.getElementById('result').innerHTML = '';
+      searchInput.value = '';
+    })
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].addEventListener('click', function () {
+        searchInput.value = '';
+        var selected = []
+        for (var j = 0; j < checkboxes.length; j++) {
+          if (checkboxes[j].checked) {
+            selected.push(checkboxes[j].value)
+            // remove ingredient from checkboxes list
+            checkboxes[j].parentNode.style.display = 'none';
+          }
+        }
+        console.log('Sending request with ingredients:', selected) 
+        var xhr = new XMLHttpRequest()
+        xhr.open('POST', '/get_recipes')
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            console.log('Response from server:', xhr.responseText)
+            var recipes = JSON.parse(xhr.responseText)
+            var recipesElement = document.querySelector('#recipes')
+            recipesElement.innerHTML = ''
+            for (var i = 0; i < recipes.length; i++) {
+              var recipe = recipes[i]
+              var recipeElement = document.createElement('li')
+             // recipeElement.innerHTML = recipe.name// or any other property of the recipe
+              recipeElement.setAttribute('data-id', recipe.id)
+              recipesElement.appendChild(recipeElement)
+
+              // add image of the recipe
+              var recipeImage = document.createElement('img');
+              recipeImage.src = recipe.strMealThumb;
+              recipeImage.alt = recipe.name;
+              recipeImage.style.width = '200px';
+              recipeImage.style.height = '200px';
+              recipeElement.appendChild(recipeImage);
+    
+              // add description of the recipe
+            //  var recipeDescription = document.createElement('p')
+              //recipeDescription.textContent = recipe.description // assuming the recipe object has a description property with the description text
+              //recipeElement.appendChild(recipeDescription)
+  
+              // add steps of the recipe
+              var recipeSteps = document.createElement('ol')
+              for (var j = 0; j < recipe.steps.length; j++) {
+                var step = recipe.steps[j]
+                var stepElement = document.createElement('li')
+                stepElement.textContent = step
+                recipeSteps.appendChild(stepElement)
+              }
+              recipeElement.appendChild(recipeSteps)
+  
+              recipesElement.appendChild(recipeElement)
+            }
+          }
+        }
+        xhr.send(JSON.stringify(selected))
+        document.getElementById('result').innerHTML = 'Selected Ingredients: ' + selected.join(', ')
+      })
+    }
+      document.getElementById('userInput').addEventListener('focus',()=>{
+      document.querySelector('i.fa-solid').style.display = "block"
+  })
+  document.getElementById('userInput').addEventListener('blur',()=>{
+      document.querySelector('i.fa-solid').style.display = "none"
+      if(userInput.value !== ''){
+          document.querySelector('i.fa-solid').style.display = "block"
+      }
+  })
+  
+  document.querySelector('.fa-solid').addEventListener('click',()=>{
+      if(userInput.value !==''){
+          userInput.value = ''
+      }
+  })
+  
+  document.getElementById("btn").addEventListener("click", () => {
+  
+      
+    let user = document.getElementById("userInput").value;
+  
+    let mealAPI = fetch(
+      `https://www.themealdb.com/api/json/v1/1/search.php?s=${user}`
+    );
+  
+    mealAPI.then((getData)=>{
+      return getData.json();
+    }).then((sendData)=>{
+      console.log(sendData)
+      let data =''
+      sendData.meals.forEach((e, i) => {
+  
+  
+         
+          data +=`
+          <h2 class='text-center text-secondary mt-5'>Food Area: ${e.strArea}</h2>
+          <h2 class='text-center text-warning'>Food Name: ${e.strMeal}</h2>
+          <div class="row">
+          <div class="col-md-4">
+              <img src="${e.strMealThumb}" alt="" class='w-100 img'>
+          </div>
+          <div class="col-md-4">
+              <h2>Ingredients:</h2>
+              <ul>
+                  <li>${e.strIngredient1}</li>
+                  <li>${e.strIngredient2}</li>
+                  <li>${e.strIngredient3}</li>
+                  <li>${e.strIngredient4}</li>
+                  <li>${e.strIngredient5}</li>
+                  <li>${e.strIngredient6}</li>
+                  <li>${e.strIngredient7}</li>
+                  <li>${e.strIngredient8}</li>
+                  <li>${e.strIngredient9}</li>
+                  <li>${e.strIngredient10}</li>
+                  <li>${e.strIngredient11}</li>
+                  <li>${e.strIngredient12}</li>
+                  <li>${e.strIngredient13}</li>
+                  <li>${e.strIngredient14}</li>
+                  <li>${e.strIngredient15}</li>
+                  <li>${e.strIngredient16}</li>
+                  <li>${e.strIngredient17}</li>
+                  <li>${e.strIngredient18}</li>
+                  <li>${e.strIngredient19}</li>
+                  <li>${e.strIngredient20}</li>
+                 
+              </ul>
+          </div>
+          <div class="col-md-4">
+              <h2>Measurements:</h2>
+              <ul>
+              <li>${e.strMeasure1}</li>
+              <li>${e.strMeasure2}</li>
+              <li>${e.strMeasure3}</li>
+              <li>${e.strMeasure4}</li>
+              <li>${e.strMeasure5}</li>
+              <li>${e.strMeasure6}</li>
+              <li>${e.strMeasure7}</li>
+              <li>${e.strMeasure8}</li>
+              <li>${e.strMeasure9}</li>
+              <li>${e.strMeasure10}</li>
+              <li>${e.strMeasure11}</li>
+              <li>${e.strMeasure12}</li>
+              <li>${e.strMeasure13}</li>
+              <li>${e.strMeasure14}</li>
+              <li>${e.strMeasure15}</li>
+              <li>${e.strMeasure16}</li>
+              <li>${e.strMeasure17}</li>
+              <li>${e.strMeasure18}</li>
+              <li>${e.strMeasure19}</li>
+              <li>${e.strMeasure20}</li>
+             
+          </ul>
+          </div>
+      </div>
+      <div class="col-12">
+          <h2>Instructions:</h2>
+          <p>${e.strInstructions}</p>
+      </div>
+      <div class='col-6 offset-3'>
+       
+  
+          <!-- Modal -->
+  <div class="modal fade" id="exampleModal${i}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">${e.strMeal}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+      </div>
+          `
+          heading.innerHTML = ` <h1 class='text-center text-danger'>Food Category: ${sendData.meals[0].strCategory}</h1>`
+          appendData.innerHTML = data
+      });
+    }).catch((error)=>{
+      document.querySelector('.find').style.display = 'none';
+      document.querySelector('.notfound').innerHTML = "Meal Not Found";
+      document.querySelector('.try').innerHTML = "Try Something Else";
+    })
+  });
+  
+
+  </script>
+    {% endblock %}

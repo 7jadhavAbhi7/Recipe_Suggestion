@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Filter Data</title>
+  </head>
+  <body>
+    <form method="post" action="{{ url_for('filter_data') }}">
+      <label><input type="checkbox" name="category" value="sports"> Sports</label>
+      <label><input type="checkbox" name="category" value="entertainment"> Entertainment</label>
+      <label><input type="checkbox" name="category" value="politics"> Politics</label>
+      <button type="submit">Filter</button>
+    </form>
+  </body>
+</html>

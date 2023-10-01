@@ -1,0 +1,108 @@
+<!-- {% extends "base.html" %}
+
+{% block title %}{{ recipe['name'].title() }}{% endblock %}
+
+{% block content %}
+<pre>{{ recipe | pprint }}</pre>
+{% endblock %}
+ -->
+
+ {% extends 'base.html' %}
+
+ {% block title %}
+   Recipe Suggestor - Recipes
+ {% endblock %}
+ 
+ {% block content %}
+   <div class="container-fluid">
+     <div class="row">
+       <div class="col-6">
+         <h2>Ingredients</h2>
+         <input type="text" id="ingredient-search" placeholder="Search for ingredients...">
+         <ul id="ingredient-list">
+           {% for ing in ingredients %}
+             <li>
+               <input type="checkbox" name="Ingredients" value="{{ ing }}" />{{ ing }}
+             </li>
+           {% endfor %}
+         </ul>
+       </div>
+       <div class="col-6">
+         <h2>Recipes</h2>
+         <div id="recipe-list">
+           {% for recipe in recipes %}
+             <div class="recipe" data-ingredients="{{ recipe.ingredients }}">
+               <h3>{{ recipe.name }}</h3>
+               <p>{{ recipe.description }}</p>
+             </div>
+           {% endfor %}
+         </div>
+       </div>
+     </div>
+   </div>
+ 
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script>
+     var checkboxes = document.getElementsByName('Ingredients');
+     var ingredientSearch = document.getElementById('ingredient-search');
+     var ingredientList = document.getElementById('ingredient-list');
+     var recipeList = $('#recipe-list').find('.recipe');
+ 
+     ingredientSearch.addEventListener('input', function () {
+       var query = this.value.toLowerCase();
+       var filteredIngredients = [];
+ 
+       // Filter ingredients by search query
+       checkboxes.forEach(function (checkbox) {
+         if (checkbox.value.toLowerCase().includes(query)) {
+           filteredIngredients.push(checkbox);
+         }
+       });
+ 
+       // Show all ingredients if search query is empty
+       if (query === '') {
+         filteredIngredients = checkboxes;
+       }
+ 
+       // Show/hide filtered ingredients
+       checkboxes.forEach(function (checkbox) {
+         if (filteredIngredients.includes(checkbox)) {
+           checkbox.parentNode.style.display = '';
+         } else {
+           checkbox.parentNode.style.display = 'none';
+         }
+       });
+     });
+ 
+     //ingredientSearch.addEventListener('keydown', function (event) {
+       // When user presses the "Enter" key, prevent form submission
+      // if (event.keyCode === 13) {
+        // event.preventDefault();
+       //}
+    // });
+ 
+     // Filter recipes based on selected ingredients
+     checkboxes.forEach(function (checkbox) {
+       checkbox.addEventListener('click', function () {
+         var selectedIngredients = [];
+         checkboxes.forEach(function (checkbox) {
+           if (checkbox.checked) {
+             selectedIngredients.push(checkbox.value);
+           }
+         });
+         recipeList.each(function () {
+           var recipeIngredients = $(this).data('ingredients').split(',');
+           var hasAllIngredients = selectedIngredients.every(function (ingredient) {
+             return recipeIngredients.includes(ingredient);
+           });
+           if (hasAllIngredients) {
+             $(this).show();
+           } else {
+             $(this).hide();
+           }
+         });
+       });
+     });
+   </script>
+ {% endblock %}
+ 

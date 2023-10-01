@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+Logged in as {{ session['username'] }}.
+<br>
+<a href="{{ url_for("logout") }}">Logout</a>
+{% endblock %}
