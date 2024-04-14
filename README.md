@@ -1,5 +1,5 @@
 
-# Recipe Suggestion System 🥕🫑🥒🥜🍆
+# Recipe Suggestion System 🥕
 Overview
 This project is a Recipe Suggestion System that utilizes Flask, JavaScript, Jinja templates, MongoDB, and BeautifulSoup.
 It allows users to search for recipes based on various criteria and view detailed recipe information.
